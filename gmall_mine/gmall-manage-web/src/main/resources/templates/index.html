@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui/easyloader.js"></script>
+
+    <script type="text/javascript" src="/easyui/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="/webuploader/webuploader.js"></script>
+    <link rel="stylesheet" type="text/css" href="/webuploader/webuploader.css">
+
+    <script type="text/javascript" src="layer/layer.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css"  href="/easyui/themes/default/easyui.css">
+    <title>帅东后台</title>
+</head>
+    <body class="easyui-layout">
+        <div data-options="region:'north',border:false" style="height:60px;background:#B3DFDA;padding:10px">
+            帅东的后台管理系统
+        </div>
+        <div data-options="region:'west',split:true,title:'West'" style="width:200px;padding:10px;">
+            <div class="easyui-accordion" style="width:180px;">
+                <div title="About" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                    <ul>
+                        <li>
+                            <a href="javascript:add_attr_tab();">属性信息管理</a>
+                        </li>
+                    </ul>
+                </div>
+                <div title="Help" data-options="iconCls:'icon-help'" style="padding:10px;">
+                    <ul>
+                        <li>
+                            <a href="javascript:add_spu_tab();">SPU信息管理</a>
+                        </li>
+                    </ul>            </div>
+                <div title="TreeMenu" data-options="iconCls:'icon-search'" style="padding:10px;">
+                    <ul>
+                        <li>
+                            其他信息管理
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region
+        </div>
+        <div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
+        <div data-options="region:'center',title:'Center'">
+            <div class="easyui-tabs" id="tt"></div>
+        </div>
+
+    <script language="JavaScript">
+        function add_attr_tab() {
+            var exists = $("#tt").tabs('exists','属性信息管理');
+            if(!exists){
+                $("#tt").tabs('add',{
+                    title:'属性信息管理',
+                    href:'arriListPage',
+                    closable:true,
+                    tools:[{
+                        iconCls:'icon-mini-refresh',
+                        handler:function() {
+                            alert('refresh');
+                        }
+                    }]
+                });
+            }else {
+                $("#tt").tabs('select','属性信息管理');
+            };
+        }
+
+        function add_spu_tab() {
+            var exists = $("#tt").tabs('exists','SPU信息管理');
+            if(!exists){
+                $("#tt").tabs('add',{
+                    title:'SPU信息管理',
+                    href:'spuListPage',
+                    closable:true,
+                    tools:[{
+                        iconCls:'icon-mini-refresh',
+                        handler:function(){
+                            alert('refresh');
+                        }
+                    }]
+                });
+            }else {
+                $("#tt").tabs('select','SPU信息管理');
+            };
+        }
+    </script>
+    </body>
+</html>

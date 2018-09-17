@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-----------------弹出框----------------------------->
+<div id="spuSaleAttr_dlg" class="easyui-dialog" title="编辑销售属性" style="width:500px;height:400px;"
+     closed="true"  data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#spuSaleAttrBtns" >
+    <br/><br/>
+    <!------------------从基本销售属性中选择------------->
+    销售属性：  <select name="saleAttr" id="saleAttrSelect"  class="easyui-combobox" data-options="valueField:'id',textField:'name',url:'baseSaleAttrList'" style="width:100px">  </select>
+    <br/><br/>
+
+
+    <!----------------销售属性值列表---------------------------->
+    <table id="spuSaleAttrValueDg" class="easyui-datagrid" title="销售属性值列表"
+           data-options="singleSelect:true,method:'get',toolbar:'#spuSaleAttrValueTootbar'" ></table>
+
+
+
+
+    <!----------------销售属性值列表工具栏----------------------->
+    <div id="spuSaleAttrValueTootbar" style="padding:5px;height:auto"  >
+        <div style="margin-bottom:5px">
+            <a href="#" id="spuSaleAttrValueAddBtn" class="easyui-linkbutton" iconCls="icon-add" onclick="addSpuSaleAttrValue()" plain="true">添加</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeSpuSaleAttrValue()" >删除</a>
+        </div>
+    </div>
+
+
+    <div id="spuSaleAttrBtns">
+        <a href="#" class="easyui-linkbutton" onclick="saveSpuSaleAttr()">确 定</a>
+        <a href="#" class="easyui-linkbutton" onclick="closeSpuSaleAttr()">关 闭</a>
+    </div>
+</div>
+<script language="JavaScript">
+
+    function closeSpuSaleAttr() {
+        $("#spuSaleAttr_dlg").dialog("close");
+    }
+
+    function saveSpuSaleAttr() {
+        var id = $("#saleAttrSelect").combobox('getValue');
+        var saleAttrName = $("#saleAttrSelect").combobox('getText');
+
+        var spuSaleAttrValueJson =  $("#spuSaleAttrValueDg").datagrid('getData');
+
+        $("#spuSaleAttrDg").datagrid('appendRow',{
+                    id: id,
+            saleAttrName: saleAttrName,
+            spuSaleAttrValueJson: spuSaleAttrValueJson
+        });
+        console.log(JSON.stringify(spuSaleAttrValueJson));
+
+        $("#spuSaleAttr_dlg").dialog("close");
+    }
+
+    function addSpuSaleAttrValue() {
+        saleAttrId = $("#saleAttrSelect").combobox('getValue');
+        if(saleAttrId){
+            $('#spuSaleAttrValueDg').datagrid('appendRow', {
+                id: '', attrName: ''
+            });
+        }else {
+            alert("请先选择销售属性");
+        }
+
+    }
+    
+    function removeSpuSaleAttrValue() {
+        var row = $('#spuSaleAttrValueDg').datagrid('getSelected');
+        // 根据选中行获得行号
+        var index = $('#spuSaleAttrValueDg').datagrid('getRowIndex',row);
+        // 根据行号删除
+        $('#spuSaleAttrValueDg').datagrid('deleteRow',index);
+    }
+
+    function initSpuSaleAttrValueListDatagrid(data) {
+
+            $("#saleAttrSelect").combobox('clear');
+            $("#spuSaleAttrValueDg").datagrid('loadData', { total: 0, rows: [] });
+            d = $('#spuSaleAttrValueDg').datagrid({
+                columns:[[
+                    {field:'id',title:'销售属性编号',width:100},
+                    {field:'saleAttrValueName',title:'销售属性名称',width:200,
+                        //设置输入框双击可编辑许可
+                        editor:{
+                            type:"validatebox",options:{required:true}
+                        }
+                    }
+                ]],
+                onDblClickRow: function (rowIndex, rowData) {
+                    //双击开启编辑行
+                    d.datagrid("beginEdit", rowIndex);
+                    //设定当失去焦点时,退出编辑状态
+                    var valueName = rowData.valueName;
+                    $("input.datagrid-editable-input").val(valueName).bind("blur",function(evt){
+                        d.datagrid('endEdit',rowIndex);
+                    });
+                }
+            });
+    }
+
+    //初始化销售属性编辑列表
+    function iditSpuSaleAttrValueListDatagrid(data) {
+        var rows = data.rows;
+        var id = rows.id;
+        console.log(id);
+        var saleAttrName = rows.saleAttrName;
+        console.log(JSON.stringify(saleAttrName));
+        var spuSaleAttrValueJson = rows.spuSaleAttrValueJson;
+        $("#saleAttrSelect").combobox('clear');
+        $("#spuSaleAttrValueDg").datagrid('loadData', { total: 0, rows: [] });
+        $("#saleAttrSelect").combobox('setValue',id)
+    };
+
+</script>
+</body>
+</html>
